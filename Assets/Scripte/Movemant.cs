@@ -6,6 +6,7 @@ using UnityEngine.Serialization;
 public class Movemant : MonoBehaviour
 {
     private Rigidbody _rigidbody;
+    private AudioSource _audio;
 
     [SerializeField] private float rotationThrust = 100;
 
@@ -15,6 +16,7 @@ public class Movemant : MonoBehaviour
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -29,18 +31,34 @@ public class Movemant : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             _rigidbody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
+            if (!_audio.isPlaying)
+            {
+                _audio.Play();
+            }
+            else
+            {
+                _audio.Stop();
+            }
         }
+
     }
 
     private void ProcessRotation()
     {
         if (Input.GetKey(KeyCode.A))
         {
-            transform.Rotate(Vector3.forward * rotationThrust *Time.deltaTime);
+            ApplayRotation(rotationThrust);
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(-Vector3.forward * rotationThrust* Time.deltaTime);
+            ApplayRotation(-rotationThrust);
         }
+    }
+
+    void ApplayRotation(float rotationThisFrame)
+    {
+        _rigidbody.freezeRotation = true; //freezing rotation so we can manually rotate
+        transform.Rotate(Vector3.forward * Time.deltaTime * rotationThisFrame);
+        _rigidbody.freezeRotation = false;
     }
 }
