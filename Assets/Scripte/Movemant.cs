@@ -9,8 +9,8 @@ public class Movemant : MonoBehaviour
     private AudioSource _audio;
 
     [SerializeField] private float rotationThrust = 100;
-
     [SerializeField] private float mainThrust = 100;
+    [SerializeField] private AudioClip mainEngine;
 
     // Start is called before the first frame update
     void Start()
@@ -33,7 +33,7 @@ public class Movemant : MonoBehaviour
             _rigidbody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
             if (!_audio.isPlaying)
             {
-                _audio.Play();
+                _audio.PlayOneShot(mainEngine);
             }
             else
             {
